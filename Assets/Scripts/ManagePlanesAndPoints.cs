@@ -5,25 +5,29 @@ public class ManagePlanesAndPoints : MonoBehaviour
 {
     public ARPlaneManager planeManager;
     public ARPointCloudManager pointCloudManager;
-    public ARRaycastManager raycastManager;
-    bool turning = true;
 
-    public void ManagersTurning()
+    public void ManagersTurning(bool state)
     {
-        turning = !turning;
-        if (turning)
+        if (state)
         {
             planeManager.enabled = true;
             pointCloudManager.enabled = true;
-            raycastManager.enabled = true;
         }
         else
         {
             planeManager.enabled = false;
+            foreach (var plane in planeManager.trackables)
+            {
+                plane.gameObject.SetActive(false);
+            }
             pointCloudManager.enabled = false;
-            raycastManager.enabled = false;
+            foreach (var particle in pointCloudManager.trackables)
+            {
+                particle.gameObject.SetActive(false);
+            }
         }
     }
+
     void Update()
     {
         
