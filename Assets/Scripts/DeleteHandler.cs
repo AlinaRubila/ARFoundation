@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using NUnit.Framework;
 using Unity.VisualScripting;
+using Unity.XR.CoreUtils;
 
 public class DeleteHandler : MonoBehaviour
 {
@@ -41,17 +42,22 @@ public class DeleteHandler : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             if (placedObjects.Contains(hit.collider.gameObject))
-            choosenObject = hit.collider.gameObject;
+            {
+                choosenObject = hit.collider.gameObject;
+                var manipulation = hit.collider.GetComponent<ManipulateObject>();
+                manipulation.EnableManipulation();
+            }
         }
-        DeleteObject();
+        if (isAllowed) { DeleteObject(); }
     }
 
     public void DeleteObject()
     {
-        if (isAllowed && choosenObject != null)
+        if (choosenObject != null)
         {
             Destroy(choosenObject);
             choosenObject = null;
+            placedObjects.Remove(choosenObject);
         }
     }
     void Update()

@@ -51,20 +51,20 @@ namespace UnityEngine.XR.ARFoundation.Samples
             }
             else
             {
-                notUI = EventSystems.EventSystem.current.IsPointerOverGameObject();
+                notUI = EventSystem.current.IsPointerOverGameObject();
             }
 
             if (m_RaycastManager.Raycast(touchPosition, s_Hits, TrackableType.PlaneWithinPolygon) && !notUI)
             {
                 var hitPose = s_Hits[0].pose;
 
-                if (spawnedObject == null)
+                if (spawnedObject == null && !deleteHandler.allowance)
                 {
                     spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
                     deleteHandler.PlaceNew(spawnedObject);
                     manager.ManagersTurning(false);
                 }
-                else { spawnedObject.transform.position = hitPose.position; }
+                //else if (!deleteHandler.allowance) { spawnedObject.transform.position = hitPose.position; }
             }
         }
 

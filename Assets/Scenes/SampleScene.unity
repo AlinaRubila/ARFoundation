@@ -634,7 +634,7 @@ MonoBehaviour:
         m_MethodName: changeChoice
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 9036865950930375223, guid: 0666adca3a7cbf549aef5cce1ba82a3e, type: 3}
+          m_ObjectArgument: {fileID: 4251875399452119822, guid: ddb88e721aa0b41449b2b33af8244680, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1124,8 +1124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 304, y: -311}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 304, y: -91}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &944114808
 MonoBehaviour:
@@ -2032,6 +2032,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1577679459}
   m_CullTransparentMesh: 1
+--- !u!1 &1734072999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1734073001}
+  - component: {fileID: 1734073000}
+  m_Layer: 0
+  m_Name: XR Interaction Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1734073000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734072999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+--- !u!4 &1734073001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734072999}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1792061261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,6 +2414,7 @@ GameObject:
   - component: {fileID: 1970591805}
   - component: {fileID: 1970591806}
   - component: {fileID: 1970591807}
+  - component: {fileID: 1970591808}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -2469,9 +2516,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f75b883dbda844393d71c743c8d774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlacedPrefab: {fileID: 9036865950930375223, guid: 0666adca3a7cbf549aef5cce1ba82a3e, type: 3}
+  m_PlacedPrefab: {fileID: 4251875399452119822, guid: ddb88e721aa0b41449b2b33af8244680, type: 3}
   manager: {fileID: 1962700834}
   deleteHandler: {fileID: 1962700836}
+--- !u!114 &1970591808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970591801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <trackablesChanged>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SerializedLibrary: {fileID: 0}
+  m_MaxNumberOfMovingImages: 0
+  m_TrackedImagePrefab: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2485,3 +2550,4 @@ SceneRoots:
   - {fileID: 1813657332}
   - {fileID: 225329895}
   - {fileID: 1962700835}
+  - {fileID: 1734073001}
