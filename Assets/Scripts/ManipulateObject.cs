@@ -54,8 +54,9 @@ public class ManipulateObject : MonoBehaviour
                 Touch screenTouch = Input.GetTouch(0);
                 if (screenTouch.phase == TouchPhase.Moved) 
                 {
-                    Vector3 move = -transform.right * screenTouch.deltaPosition.x + -transform.forward *  screenTouch.deltaPosition.y;
-                    transform.position += move * 1 * Time.deltaTime;
+                    Vector3 move = -transform.right * screenTouch.deltaPosition.y + transform.forward *  screenTouch.deltaPosition.x;
+                    //transform.position += move * 1 * Time.deltaTime;
+                    transform.Translate(move * 1 * Time.deltaTime);
                 }
                 if (screenTouch.phase == TouchPhase.Ended )
                 {
@@ -67,8 +68,9 @@ public class ManipulateObject : MonoBehaviour
             {
                 float movementX = Input.GetAxis("Horizontal");
                 float movementZ = Input.GetAxis("Vertical");
-                Vector3 move = -transform.right * movementX + -transform.forward * movementZ;
-                transform.position += move * 1 * Time.deltaTime;
+                Vector3 move = -transform.right * movementZ + transform.forward * movementX;
+                //transform.position += move * 1 * Time.deltaTime;
+                transform.Translate(move * 1 * Time.deltaTime);
             }
             else if (Input.GetMouseButtonUp(0))
             {
