@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8097457043223601619}
   - component: {fileID: 4786188601790756603}
   - component: {fileID: 6559909857428418992}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Strawberry_Donut_Sprinkles_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 8959907433573177565}
   - component: {fileID: 2439750546930708170}
   - component: {fileID: 5295926731508902645}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Picked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

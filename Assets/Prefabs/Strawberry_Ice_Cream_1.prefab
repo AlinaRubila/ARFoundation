@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1275082879822529721}
   - component: {fileID: 5328053687536829575}
   - component: {fileID: 1537934533372345759}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Strawberry_Ice_Cream_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 5678799757113638694}
   - component: {fileID: 927376509162231748}
   - component: {fileID: 7340646278553553878}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Picked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6628941127826973350}
   - component: {fileID: 7959405963247306972}
   - component: {fileID: -2398470988559765951}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orange_Popsicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 6769772075305391066}
   - component: {fileID: 4390133217281326958}
   - component: {fileID: 8176851965252956028}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Picked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

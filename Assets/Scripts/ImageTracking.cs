@@ -7,6 +7,7 @@ public class ImageTracking : MonoBehaviour
 {
     [SerializeField] private GameObject[] _placeablePrefabs;
     [SerializeField] private ARTrackedImageManager _imageManager;
+    [SerializeField] private AttachManagement _attachManager;
     private Dictionary<string, GameObject> _accessiblePrefabs = new Dictionary<string, GameObject>();
     private Dictionary<string , GameObject> _spawnedObjects = new Dictionary<string , GameObject>();
 
@@ -37,11 +38,6 @@ public class ImageTracking : MonoBehaviour
         {
             UpdateImage(imageUpdated);
         }
-        foreach (var imageRemoved in obj.removed)
-        {
-            Destroy(_spawnedObjects[imageRemoved.referenceImage.name]);
-            _spawnedObjects.Remove(imageRemoved.referenceImage.name);
-        }
     }
     void UpdateImage(ARTrackedImage image)
     {
@@ -57,5 +53,6 @@ public class ImageTracking : MonoBehaviour
             _spawnedObjects[name].transform.position = image.transform.position;
             _spawnedObjects[name].transform.rotation = image.transform.rotation;
         }
+        if (tracking.isSelected) _attachManager.ObjectSelection(_spawnedObjects[name]);
     }
 }

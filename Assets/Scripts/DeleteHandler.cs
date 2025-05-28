@@ -6,48 +6,37 @@ using UnityEngine.EventSystems;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
+using UnityEngine.XR.ARSubsystems;
 
 public class DeleteHandler : MonoBehaviour
 {
     bool isAllowed = false;
     GameObject choosenObject;
-    List<GameObject> placedObjects = new List<GameObject>();
+    List<GameObject> _placedObjects = new List<GameObject>();
     public bool allowance { 
         get { return isAllowed; }
         private set { }
     }
-
-    public void PlaceNew(GameObject obj)
+    public void AddObject(GameObject obj)
     {
-        placedObjects.Add(obj);
+        _placedObjects.Add(obj);
     }
     public void ManageAllowment(bool allow)
     {
         isAllowed = allow;
     }
-
     void ObjectSelection()
     {
-        Ray ray;
-        RaycastHit hit;
-        if (EventSystem.current.IsPointerOverGameObject()) 
-            return;
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
-                ray = Camera.main.ScreenPointToRay(touch.position);
-        }
-        else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (placedObjects.Contains(hit.collider.gameObject))
+        foreach (var obj in _placedObjects) 
+        { 
+            var m = obj.GetComponent<ManipulateObject>();
+            if (m.selected) 
             {
-                choosenObject = hit.collider.gameObject;
-                var manipulation = hit.collider.GetComponent<ManipulateObject>();
-                manipulation.EnableManipulation();
+                choosenObject = obj;
+                break;
             }
         }
+        if (choosenObject == null) return;
         if (isAllowed) { DeleteObject(); }
     }
 
@@ -55,13 +44,13 @@ public class DeleteHandler : MonoBehaviour
     {
         if (choosenObject != null)
         {
+            _placedObjects.Remove(choosenObject);
             Destroy(choosenObject);
             choosenObject = null;
-            placedObjects.Remove(choosenObject);
         }
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0) ObjectSelection();
+        ObjectSelection();
     }
 }

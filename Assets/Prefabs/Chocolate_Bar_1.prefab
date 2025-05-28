@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 5372184861777753943}
   - component: {fileID: 838883572607198871}
   - component: {fileID: 949431128747115689}
-  - component: {fileID: 3286040095333951375}
   - component: {fileID: -7547809086745527171}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chocolate_Bar_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,29 +111,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6712406659517524012, guid: 89e35e344bd1d7141999550760acc457, type: 3}
---- !u!114 &3286040095333951375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251875399452119822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b309761041ee54265b7f9a8c0f373dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ObjectPlaneTranslationMode: 2
-  m_EnablePlaneClassificationFilter: 0
-  m_PlaneClassificationsList: 
-  m_PlaneClassifications: 0
-  m_UseInteractorOrientation: 0
-  m_MinScale: 0.25
-  m_MaxScale: 2
-  m_ScaleSensitivity: 0.75
-  m_Elasticity: 0.15
-  m_EnableElasticBreakLimit: 0
-  m_ElasticBreakLimit: 0.5
 --- !u!114 &-7547809086745527171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +135,7 @@ GameObject:
   - component: {fileID: 3214617806649325258}
   - component: {fileID: 3713437171828451182}
   - component: {fileID: 3074547410302698285}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Picked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

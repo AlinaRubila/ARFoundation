@@ -44,24 +44,15 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 return;
 
             var touchPosition = Pointer.current.position.ReadValue();
-            bool notUI = true;
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-                notUI = EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-            }
-            else
-            {
-                notUI = EventSystem.current.IsPointerOverGameObject();
-            }
 
-            if (m_RaycastManager.Raycast(touchPosition, s_Hits, TrackableType.PlaneWithinPolygon) && !notUI)
+            if (m_RaycastManager.Raycast(touchPosition, s_Hits, TrackableType.PlaneWithinPolygon))
             {
                 var hitPose = s_Hits[0].pose;
 
                 if (spawnedObject == null && !deleteHandler.allowance)
                 {
                     spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
-                    deleteHandler.PlaceNew(spawnedObject);
+                    deleteHandler.AddObject(spawnedObject);
                     manager.ManagersTurning(false);
                 }
                 //else if (!deleteHandler.allowance) { spawnedObject.transform.position = hitPose.position; }
