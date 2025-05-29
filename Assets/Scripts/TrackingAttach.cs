@@ -19,21 +19,21 @@ public class TrackingAttach : MonoBehaviour, IPointerClickHandler, IPointerUpHan
         isAttached = value;
         if (isAttached) { currentSelection = detachSelect; }
         else { currentSelection = attachSelect; }
+        ManageSelection(isSelected);
     }
     public void ManageSelection(bool mode)
     {
+        if (currentSelection != null)
         currentSelection.GetComponent<MeshRenderer>().enabled = mode;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         isSelected = true;
-        ManageSelection(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         isSelected = false;
-        ManageSelection(false);
     }
 }

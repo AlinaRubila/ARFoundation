@@ -296,3 +296,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd10477f1fe194c4a833f588ce2cc53e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachSelect: {fileID: 1201935150340359772}
+  detachSelect: {fileID: 1673480200838485503}

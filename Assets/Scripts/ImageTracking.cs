@@ -48,7 +48,8 @@ public class ImageTracking : MonoBehaviour
             _spawnedObjects.Add(name, newPrefab);
         }
         var tracking = _spawnedObjects[name].GetComponent<TrackingAttach>();
-        if (tracking != null || tracking.attachment) 
+        if (tracking == null) return;
+        if (tracking.attachment) 
         {
             _spawnedObjects[name].transform.position = image.transform.position;
             _spawnedObjects[name].transform.rotation = image.transform.rotation;

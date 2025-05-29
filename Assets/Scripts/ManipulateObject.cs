@@ -19,50 +19,22 @@ public class ManipulateObject : MonoBehaviour, IPointerClickHandler, IPointerUpH
             {
                 Touch screenTouch1 = Input.GetTouch(0);
                 Touch screenTouch2 = Input.GetTouch(1);
-                Vector2 touchDifference = (screenTouch2.position + screenTouch1.position) / 2;
-                if (screenTouch1.phase == TouchPhase.Moved || screenTouch2.phase == TouchPhase.Moved) 
-                    transform.Rotate(new Vector3(touchDifference.y, touchDifference.x, 0f) * 100f * Time.deltaTime);
+                //Vector2 touchDifference = (screenTouch2.position + screenTouch1.position) / 2;
+                Vector2 touchDifference = screenTouch2.deltaPosition;
+                if (screenTouch1.phase == TouchPhase.Moved || screenTouch2.phase == TouchPhase.Moved)
+                    transform.Rotate(new Vector3(touchDifference.x, touchDifference.y,  0f) * 10f * Time.deltaTime);
             }
             else if (Input.GetMouseButton(0))
             {
                 float rotationX = Input.GetAxis("Mouse X");
                 float rotationY = Input.GetAxis("Mouse Y");
-                transform.Rotate(new Vector3(rotationY, rotationX, 0) * 100f * Time.deltaTime);
+                transform.Rotate(new Vector3(rotationY, rotationX, 0) * Time.deltaTime);
             }
         }
-    }
-
-    /*void Movement()
-    {
-        if (selected)
-        {
-            if (Input.touchCount == 1)
-            {
-                Touch screenTouch = Input.GetTouch(0);
-                if (screenTouch.phase == TouchPhase.Moved) 
-                {
-                    Vector3 move = -transform.right * screenTouch.deltaPosition.y + transform.forward *  screenTouch.deltaPosition.x;
-                    transform.Translate(move * 1 * Time.deltaTime);
-                }
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                float movementX = Input.GetAxis("Horizontal");
-                float movementZ = Input.GetAxis("Vertical");
-                Vector3 move = -transform.right * movementZ + transform.forward * movementX;
-                transform.Translate(move * 1 * Time.deltaTime);
-            }
-        }
-    }*/
-    void Update()
-    {
-        Rotation();
-        //Movement();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("OnPointerClick");
         clicked = true;
         selected = true;
         selection.GetComponent<MeshRenderer>().enabled = true;
@@ -71,7 +43,6 @@ public class ManipulateObject : MonoBehaviour, IPointerClickHandler, IPointerUpH
     public void OnPointerUp(PointerEventData eventData)
     {
         if (!clicked) return;
-        Debug.Log("OnPointerUp");
         selected = false;
         selection.GetComponent<MeshRenderer>().enabled = false;
         clicked = false;
@@ -79,8 +50,12 @@ public class ManipulateObject : MonoBehaviour, IPointerClickHandler, IPointerUpH
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log((Vector3)eventData.position);
-        transform.localPosition += new Vector3(eventData.delta.y / 1000, 0, -eventData.delta.x / 1000) ;
+        if (Input.touchCount == 2) 
+        {
+            Rotation();
+            return; 
+        }
+        transform.localPosition += new Vector3(eventData.delta.x / 1000, 0, eventData.delta.y / 1000) ;
     }
     public void OnBeginDrag(PointerEventData eventData)
     {

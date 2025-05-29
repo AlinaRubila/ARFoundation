@@ -2708,7 +2708,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962700833}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39fb103951fc77d4bab6b15469cd1ccd, type: 3}
   m_Name: 
@@ -2858,7 +2858,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1970591801}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c08270ad5af9bc94797e2db79b23ed9b, type: 3}
   m_Name: 
@@ -2868,7 +2868,7 @@ MonoBehaviour:
   - {fileID: 9196528179259065527, guid: 7ee1036d0035ef14483ae90d340a799e, type: 3}
   - {fileID: 2296726645206457021, guid: df5e3037ec2b1294a94ba8857c2415da, type: 3}
   _imageManager: {fileID: 1970591808}
-  _attachManager: {fileID: 0}
+  _attachManager: {fileID: 1962700837}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

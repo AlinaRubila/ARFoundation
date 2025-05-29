@@ -26,7 +26,7 @@ public class AttachManagement : MonoBehaviour
         {
             tracking.ChangeValue(attachMode);
             tracking.ManageSelection(false);
-		selectedObj = null;
+		    selectedObj = null;
         }
     }
     void Update()

@@ -125,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd10477f1fe194c4a833f588ce2cc53e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachSelect: {fileID: 7501453217281529980}
+  detachSelect: {fileID: 3760441161347715972}
 --- !u!1 &3760441161347715972
 GameObject:
   m_ObjectHideFlags: 0
