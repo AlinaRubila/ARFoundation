@@ -870,6 +870,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AR Default Point Cloud
       objectReference: {fileID: 0}
+    - target: {fileID: 5997285214810732455, guid: 5162b1ad327fc97449f5b8d89bd53194, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

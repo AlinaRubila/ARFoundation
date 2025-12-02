@@ -5,21 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/StartMenu.unity
-    guid: 185791d0d1d5b5f4ea42dc055d47a86f
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/ReplacingScene.unity
-    guid: 2aff7f8225edf994c8c726b8c427b882
-  - enabled: 0
-    path: Assets/Scenes/HybridStart.unity
-    guid: 65315f99e8aecc54499a4a505f65d496
-  - enabled: 0
-    path: Assets/Scenes/HybridScene.unity
-    guid: f1be4c4831abf354193466ca22a93238
   - enabled: 1
     path: Assets/Scenes/2 semester/StartMultiplayer.unity
     guid: 2f7e1878fc4f28a449ec29d6f221c49e
