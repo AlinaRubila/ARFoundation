@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
+  m_Name: Game_Marks
+  m_EditorClassIdentifier: 
+  m_GuidLow: 5188078310727481291
+  m_GuidHigh: 1278006585449219506
+  m_DataStore:
+    m_Storage: []
+  m_Images:
+  - m_SerializedGuid:
+      m_GuidLow: 5759766522371366138
+      m_GuidHigh: 11777213437082536608
+    m_SerializedTextureGuid:
+      m_GuidLow: 12548252308218922373
+      m_GuidHigh: 15163527416470929272
+    m_Size: {x: 0.045, y: 0.045}
+    m_SpecifySize: 1
+    m_Name: cat_mark
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5554878565558784303
+      m_GuidHigh: 6941339166791212464
+    m_SerializedTextureGuid:
+      m_GuidLow: 3343031028194225780
+      m_GuidHigh: 14464708860927105355
+    m_Size: {x: 0.65, y: 0.65}
+    m_SpecifySize: 1
+    m_Name: face_mark
+    m_Texture: {fileID: 0}
