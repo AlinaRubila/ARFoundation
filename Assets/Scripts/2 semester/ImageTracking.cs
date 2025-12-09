@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 
 public class ImageTracking : MonoBehaviour
 {
     //[SerializeField] private GameObject _placeablePrefab;
     [SerializeField] private NetworkObject planePrefab;
+    [SerializeField] Button start;
     //private GameObject _spawnedObject;
     private NetworkRunner runner;
     NetworkObject spawned;
@@ -56,6 +58,7 @@ public class ImageTracking : MonoBehaviour
             Debug.Log("Spawned netObj!");
             if (netObj != null) spawned = netObj;
             isSpawned = true;
+            start.enabled = true;
         }
         spawned.transform.SetPositionAndRotation(pos, rot);
         //_spawnedObject.transform.position = image.transform.position;
