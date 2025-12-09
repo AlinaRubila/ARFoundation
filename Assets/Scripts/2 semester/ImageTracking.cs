@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.ARFoundation;
@@ -43,6 +44,8 @@ public class ImageTracking : MonoBehaviour
     {
         if (runner == null || planePrefab == null) return;
         if (!runner.IsSharedModeMasterClient) return;
+
+        if (runner.ActivePlayers.Count() < 2) return;
         Vector3 pos = image.transform.position;
         Quaternion rot = image.transform.rotation;
         if (!isSpawned)

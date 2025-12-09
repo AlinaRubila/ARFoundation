@@ -1149,6 +1149,8 @@ GameObject:
   - component: {fileID: 1970591809}
   - component: {fileID: 1970591811}
   - component: {fileID: 1970591810}
+  - component: {fileID: 1970591813}
+  - component: {fileID: 1970591812}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -1238,8 +1240,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_SerializedLibrary: {fileID: 11400000, guid: 145a58fc1e11f534ca2c9401c21829a1, type: 2}
-  m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 0}
+  m_MaxNumberOfMovingImages: 1
+  m_TrackedImagePrefab: {fileID: 8157415887161459742, guid: a0911d55705f9584a8d082ddec712eb5, type: 3}
 --- !u!114 &1970591810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,7 +1254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6d743be8f10e14e8472d40b061044d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planePrefab: {fileID: -8377487844800583479, guid: 67000a708c69ad04184112f3c4ba7815, type: 3}
+  planePrefab: {fileID: 1240905691421876993, guid: a0911d55705f9584a8d082ddec712eb5, type: 3}
 --- !u!114 &1970591811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1265,8 +1267,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b481960e202a3194c8d6a54d45f63279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planePrefab: {fileID: -8377487844800583479, guid: 67000a708c69ad04184112f3c4ba7815, type: 3}
+  planePrefab: {fileID: 1240905691421876993, guid: a0911d55705f9584a8d082ddec712eb5, type: 3}
   _imageManager: {fileID: 1970591809}
+--- !u!114 &1970591812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970591801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a93abf1a391964a94e5c139605105b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsSceneTakeOverEnabled: 1
+  LogSceneLoadErrors: 1
+  DestroySpawnedPrefabsOnSceneUnload: 1
+--- !u!114 &1970591813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970591801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
