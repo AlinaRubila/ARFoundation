@@ -12,6 +12,8 @@ public class ImageTracking : MonoBehaviour
     [SerializeField] private NetworkObject planePrefab;
     [SerializeField] Button start;
     //private GameObject _spawnedObject;
+    public static Transform sharedImageTransform;    // опорная точка
+    public static bool anchorDefined = false;
     private NetworkRunner runner;
     NetworkObject spawned;
     [SerializeField] private ARTrackedImageManager _imageManager;
@@ -59,6 +61,8 @@ public class ImageTracking : MonoBehaviour
             if (netObj != null) spawned = netObj;
             isSpawned = true;
             start.enabled = true;
+            sharedImageTransform = image.transform;
+            anchorDefined = true;
         }
         spawned.transform.SetPositionAndRotation(pos, rot);
         //_spawnedObject.transform.position = image.transform.position;
