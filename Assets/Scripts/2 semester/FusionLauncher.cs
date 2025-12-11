@@ -49,7 +49,7 @@ public class FusionLauncher : MonoBehaviour
         else
             Debug.Log("Fusion started and joined session");
     }
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RpcStartGame()
     {
         message.text = "Game has started!";
@@ -66,6 +66,12 @@ public class FusionLauncher : MonoBehaviour
     {
         if (runner.IsSharedModeMasterClient) message.text = "Pleace scan the image and wait for other players!";
         else message.text = "Waiting for other players and scanning...";
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RpcPlacedPrefab()
+    {
+        if (runner.IsSharedModeMasterClient) message.text = "Object is placed! Now you can start the game or move the image.";
+        else message.text = "Image was scanned! We will start very soon!";
     }
     /*[Rpc(RpcSources.All, RpcTargets.All)]
     void RpcPlayerJoined()
