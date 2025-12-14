@@ -8,6 +8,7 @@ public class FusionLauncher : MonoBehaviour
     private NetworkRunner runner;
     public NetworkObject planePrefab;
     public Text message;
+    public NetworkPrefabRef gameManagerPrefab;
 
     async void Start()
     {
@@ -39,6 +40,16 @@ public class FusionLauncher : MonoBehaviour
 
 
         var result = await runner.StartGame(startArgs);
+        
+        //gamestart
+        if (result.Ok)
+        {
+            if (runner.IsSharedModeMasterClient)
+            {
+                runner.Spawn(gameManagerPrefab);
+            }
+        }
+
         RpcLoadedScene();
 
         if (!result.Ok)
