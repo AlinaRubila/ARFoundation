@@ -18,11 +18,12 @@ public class ImageTracking : MonoBehaviour
     NetworkObject spawned;
     [SerializeField] private ARTrackedImageManager _imageManager;
     bool isSpawned = false;
-
+    FusionLauncher _fus;
     private void Awake()
     {
         runner = FindFirstObjectByType<NetworkRunner>();
         _imageManager = FindFirstObjectByType<ARTrackedImageManager>();
+        _fus = FindAnyObjectByType<FusionLauncher>();
     }
     private void OnEnable()
     {
@@ -58,6 +59,7 @@ public class ImageTracking : MonoBehaviour
             //_spawnedObject = newPrefab;
             var netObj = runner.Spawn(planePrefab, pos, rot);
             Debug.Log("Spawned netObj!");
+            _fus.RpcPlacedPrefab();
             if (netObj != null) spawned = netObj;
             isSpawned = true;
             start.enabled = true;

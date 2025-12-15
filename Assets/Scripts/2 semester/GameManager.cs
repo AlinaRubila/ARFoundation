@@ -13,6 +13,7 @@ public class GameManager : NetworkBehaviour
     [Header("UI Water Timer")]
     public Image waterFillUI;
     public float gameDuration = 60f;
+    public float totalTime = 0f;
 
     [Header("Gameplay")]
     public int holesToSpawn = 5;
@@ -51,6 +52,7 @@ public class GameManager : NetworkBehaviour
 
         float remaining = gameTimer.RemainingTime(Runner) ?? 0f;
         waterFillUI.fillAmount = 1f - (remaining / gameDuration);
+        if (closedHolesCount < holesToSpawn && !gameTimer.Expired(Runner)) totalTime += Time.deltaTime;
 
         if (Object.HasStateAuthority && gameTimer.Expired(Runner))
         {
@@ -85,14 +87,7 @@ public class GameManager : NetworkBehaviour
             Vector3 pos;
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
-
-            Runner.Spawn(
-                holePrefab,
-                pos,
-                rot,
-                Object.InputAuthority
-            );
-
+            Runner.Spawn(holePrefab, pos, rot, Object.InputAuthority);
         }
     }
 
@@ -101,13 +96,9 @@ public class GameManager : NetworkBehaviour
     {
         for (int i = 0; i < holesToSpawn; i++)
         {
-            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 0.5f;
+            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 0.7f;
 
-            Runner.Spawn(
-                plugPrefab,
-                spawnPos,
-                Quaternion.identity,
-                Object.InputAuthority,
+            Runner.Spawn(plugPrefab, spawnPos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
                 {
                     var rb = obj.GetComponent<Rigidbody>();
@@ -126,23 +117,33 @@ public class GameManager : NetworkBehaviour
     {
         // Берём точку ВНУТРИ полусферы
         Bounds b = hemisphere.GetComponent<Renderer>().bounds;
+        baseRadius = b.size.x / 2f; //радиус полусферы
 
         for (int i = 0; i < 20; i++)
         {
-            Vector3 randomPoint = new Vector3(
+            /*Vector3 randomPoint = new Vector3(
                 Random.Range(b.min.x, b.max.x),
                 Random.Range(b.center.y, b.max.y),
                 Random.Range(b.min.z, b.max.z)
-            );
+            );*/
+            float u = Random.value;
+            float v = Random.value;
 
-            Vector3 dir = (randomPoint - b.center).normalized;
+            float theta = u * 2 * Mathf.PI;
+            float phi = v * Mathf.PI / 2;
 
-            if (Physics.Raycast(
-                b.center,
-                dir,
-                out RaycastHit hit,
-                b.extents.magnitude
-            ))
+            float x = baseRadius * Mathf.Cos(theta) * Mathf.Sin(phi);
+            float y = baseRadius * Mathf.Cos(phi);
+            float z = baseRadius * Mathf.Sin(theta) * Mathf.Sin(phi);
+            Vector3 randomPoint = new Vector3(x, y, z);
+            Vector3 localPos = new Vector3(x, y, z);
+            worldPos = hemisphere.TransformPoint(localPos);
+            Vector3 normal = (worldPos - hemisphere.position).normalized;
+            worldRot = Quaternion.LookRotation(normal, Vector3.up);
+
+            /*Vector3 dir = (randomPoint - b.center).normalized;
+
+            if (Physics.Raycast(b.center, dir, out RaycastHit hit, b.extents.magnitude))
             {
                 if (hit.transform == hemisphere)
                 {
@@ -150,7 +151,7 @@ public class GameManager : NetworkBehaviour
                     worldRot = Quaternion.LookRotation(-hit.normal);
                     return;
                 }
-            }
+            }*/
         }
 
         // Фолбэк (чтобы не крашилось)
@@ -158,12 +159,10 @@ public class GameManager : NetworkBehaviour
         worldRot = Quaternion.identity;
     }
 
-
-
     // === Завершение игры ===
     private void WinGame()
     {
-        Debug.Log("WIN! Все дыры закрыты.");
+        Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
         Runner.Shutdown();
     }
 

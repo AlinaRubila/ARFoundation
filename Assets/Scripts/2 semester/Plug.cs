@@ -1,7 +1,8 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Plug : NetworkBehaviour
+public class Plug : NetworkBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     [Networked] public bool IsHeld { get; set; }
 
@@ -14,7 +15,7 @@ public class Plug : NetworkBehaviour
         dragPlane = new Plane(Vector3.up, Vector3.zero);
     }
 
-    void Update()
+    /*void Update()
     {
         if (!Object.HasInputAuthority) return;
 
@@ -26,9 +27,9 @@ public class Plug : NetworkBehaviour
 
         if (Input.GetMouseButtonUp(0) && IsHeld)
             Release();
-    }
+    }*/
 
-    void TryTake()
+    /*void TryTake()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -38,11 +39,11 @@ public class Plug : NetworkBehaviour
                 RPC_SetHeld(true);
             }
         }
-    }
+    }*/
 
-    void Drag()
+    void Drag(PointerEventData eventData)
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(eventData.position);
         if (dragPlane.Raycast(ray, out float enter))
         {
             transform.position = ray.GetPoint(enter);
@@ -58,5 +59,23 @@ public class Plug : NetworkBehaviour
     void RPC_SetHeld(bool state)
     {
         IsHeld = state;
+    }
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!Object.HasInputAuthority) return;
+        RPC_SetHeld(true);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!Object.HasInputAuthority) return;
+        if (!IsHeld || !eventData.pointerCurrentRaycast.isValid) return;
+        Drag(eventData);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (!Object.HasInputAuthority) return;
+        Release();
     }
 }
