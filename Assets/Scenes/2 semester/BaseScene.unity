@@ -855,7 +855,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -333, y: -831}
+  m_AnchoredPosition: {x: 133, y: -550}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1190398542
@@ -916,7 +916,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1970591810}
         m_TargetAssemblyTypeName: FusionLauncher, Assembly-CSharp
-        m_MethodName: RpcStartGame
+        m_MethodName: SpawnGameManager
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1337,6 +1337,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planePrefab: {fileID: 1240905691421876993, guid: a0911d55705f9584a8d082ddec712eb5, type: 3}
   message: {fileID: 1949225716}
+  gameManagerPrefab:
+    RawGuidValue: c60ce9380db977447b36b8ef1982c9c8
 --- !u!114 &1970591811
 MonoBehaviour:
   m_ObjectHideFlags: 0

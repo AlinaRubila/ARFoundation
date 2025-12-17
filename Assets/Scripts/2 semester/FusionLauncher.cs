@@ -42,13 +42,13 @@ public class FusionLauncher : MonoBehaviour
         var result = await runner.StartGame(startArgs);
         
         //gamestart
-        if (result.Ok)
+        /*if (result.Ok)
         {
             if (runner.IsSharedModeMasterClient)
             {
                 runner.Spawn(gameManagerPrefab);
             }
-        }
+        }*/
 
         RpcLoadedScene();
 
@@ -83,6 +83,13 @@ public class FusionLauncher : MonoBehaviour
     {
         if (runner.IsSharedModeMasterClient) message.text = "Object is placed! Now you can start the game or move the image.";
         else message.text = "Image was scanned! We will start very soon!";
+    }
+    public void SpawnGameManager()
+    {
+        if (runner.IsSharedModeMasterClient)
+        {
+            runner.Spawn(gameManagerPrefab);
+        }
     }
     /*[Rpc(RpcSources.All, RpcTargets.All)]
     void RpcPlayerJoined()
