@@ -5,13 +5,23 @@ using UnityEngine.EventSystems;
 public class Plug : NetworkBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     [Networked] public bool IsHeld { get; set; }
+    bool IsSpawned = false;
 
     Camera cam;
     Plane dragPlane;
 
+    public bool SafeIsHeld
+    {
+        get
+        {
+            if (!IsSpawned) return false;
+            return IsHeld;
+        }
+    }
     public override void Spawned()
     {
         cam = Camera.main;
+        IsSpawned = true;
         dragPlane = new Plane(Vector3.up, Vector3.zero);
     }
 
