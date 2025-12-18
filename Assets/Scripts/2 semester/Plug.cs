@@ -5,87 +5,56 @@ using UnityEngine.EventSystems;
 public class Plug : NetworkBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     [Networked] public bool IsHeld { get; set; }
-    bool IsSpawned = false;
+    [Networked] public Vector3 NetworkPosition { get; set; }
 
     Camera cam;
     Plane dragPlane;
 
-    public bool SafeIsHeld
-    {
-        get
-        {
-            if (!IsSpawned) return false;
-            return IsHeld;
-        }
-    }
+    public bool SafeIsHeld => Object != null && Object.IsValid && IsHeld;
     public override void Spawned()
     {
         cam = Camera.main;
-        IsSpawned = true;
-        dragPlane = new Plane(Vector3.up, Vector3.zero);
+        dragPlane = new Plane(Vector3.up, transform.position);
+        NetworkPosition = transform.position;
     }
-
-    /*void Update()
+    public override void Render()
     {
-        if (!Object.HasInputAuthority) return;
-
-        if (Input.GetMouseButtonDown(0))
-            TryTake();
-
-        if (Input.GetMouseButton(0) && IsHeld)
-            Drag();
-
-        if (Input.GetMouseButtonUp(0) && IsHeld)
-            Release();
-    }*/
-
-    /*void TryTake()
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            if (hit.collider.gameObject == gameObject)
-            {
-                RPC_SetHeld(true);
-            }
-        }
-    }*/
-
+        transform.position = NetworkPosition;
+    }
     void Drag(PointerEventData eventData)
     {
         Ray ray = cam.ScreenPointToRay(eventData.position);
         if (dragPlane.Raycast(ray, out float enter))
         {
-            transform.position = ray.GetPoint(enter);
+            //transform.position = ray.GetPoint(enter);
+            Vector3 pos = ray.GetPoint(enter);
+            if (Object.HasStateAuthority)
+                NetworkPosition = pos;
         }
-    }
-
-    void Release()
-    {
-        RPC_SetHeld(false);
-    }
-
-    [Rpc]
-    void RPC_SetHeld(bool state)
-    {
-        IsHeld = state;
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!Object.HasInputAuthority) return;
+        if (IsHeld) return;
+        dragPlane = new Plane(Vector3.up, transform.position);
         RPC_SetHeld(true);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!Object.HasInputAuthority) return;
-        if (!IsHeld || !eventData.pointerCurrentRaycast.isValid) return;
+        if (!Object.HasInputAuthority || !IsHeld) return;
         Drag(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!Object.HasInputAuthority) return;
-        Release();
+        RPC_SetHeld(false);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_SetHeld(bool state)
+    {
+        IsHeld = state;
     }
 }

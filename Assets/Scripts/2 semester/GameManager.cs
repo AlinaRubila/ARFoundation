@@ -54,7 +54,6 @@ public class GameManager : NetworkBehaviour
             return;*/
 
         float remaining = gameTimer.RemainingTime(Runner) ?? 0f;
-        //waterFillUI.fillAmount = 1f - (remaining / gameDuration);
         waterFillUI.fillAmount = Mathf.Clamp01(1f - remaining / gameDuration); 
         if (closedHolesCount < holesToSpawn && !gameTimer.Expired(Runner)) totalTime += Time.deltaTime;
 
@@ -99,10 +98,12 @@ public class GameManager : NetworkBehaviour
     // === Генерация затычек ===
     private void SpawnPlugs()
     {
+        MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
+        baseRadius = mf.sharedMesh.bounds.extents.x;
         for (int i = 0; i < holesToSpawn; i++)
         {
-            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 6f;
-            Vector3 pos = new Vector3(spawnPos.x, plugSpawnArea.transform.position.y, spawnPos.z);
+            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 20f * baseRadius;
+            Vector3 pos = new Vector3(spawnPos.x, 0f, spawnPos.z);
             Runner.Spawn(plugPrefab, pos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
                 {
@@ -120,18 +121,11 @@ public class GameManager : NetworkBehaviour
     // === Геометрия спавна дыр ===
     private void GeneratePointOnInsideSurface(out Vector3 worldPos, out Quaternion worldRot)
     {
-        //Bounds b = hemisphere.GetComponent<Renderer>().bounds;
-        //baseRadius = b.size.x / 2f;
         MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
         baseRadius = mf.sharedMesh.bounds.extents.x;
 
         for (int i = 0; i < 20; i++)
         {
-            /*Vector3 randomPoint = new Vector3(
-                Random.Range(b.min.x, b.max.x),
-                Random.Range(b.center.y, b.max.y),
-                Random.Range(b.min.z, b.max.z)
-            );*/
             float u = Random.value;
             float v = Random.value;
 
@@ -162,17 +156,6 @@ public class GameManager : NetworkBehaviour
             worldRot = Quaternion.LookRotation(-normal, Vector3.up);
             return;
 
-            /*Vector3 dir = (randomPoint - b.center).normalized;
-
-            if (Physics.Raycast(b.center, dir, out RaycastHit hit, b.extents.magnitude))
-            {
-                if (hit.transform == hemisphere)
-                {
-                    worldPos = hit.point;
-                    worldRot = Quaternion.LookRotation(-hit.normal);
-                    return;
-                }
-            }*/
         }
 
         // Фолбэк
