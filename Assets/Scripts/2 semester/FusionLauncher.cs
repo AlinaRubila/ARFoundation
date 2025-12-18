@@ -75,7 +75,7 @@ public class FusionLauncher : MonoBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     void RpcLoadedScene()
     {
-        if (runner.IsSharedModeMasterClient) message.text = "Pleace scan the image and wait for other players!";
+        if (runner.IsSharedModeMasterClient) message.text = "Please scan the image and wait for other players!";
         else message.text = "Waiting for other players and scanning...";
     }
     [Rpc(RpcSources.All, RpcTargets.All)]

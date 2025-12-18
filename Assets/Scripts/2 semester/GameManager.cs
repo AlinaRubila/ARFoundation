@@ -1,5 +1,6 @@
-using UnityEngine;
 using Fusion;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
@@ -22,7 +23,7 @@ public class GameManager : NetworkBehaviour
     [Networked] private TickTimer gameTimer { get; set; }
     [Networked] private int closedHolesCount { get; set; }
     private float baseRadius;
-
+    List<Vector3> spawnedHoles = new List<Vector3>();
 
     private void Awake()
     {
@@ -31,11 +32,11 @@ public class GameManager : NetworkBehaviour
 
     public override void Spawned()
     {
+        waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
         if (!Object.HasStateAuthority) return;
 
         hemisphere = GameObject.FindWithTag("Hemisphere").transform;
         plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
-        waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
 
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
 
@@ -47,11 +48,14 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        if (gameTimer.Expired(Runner))
+        if (!gameTimer.IsRunning)
             return;
+        /*if (gameTimer.Expired(Runner))
+            return;*/
 
         float remaining = gameTimer.RemainingTime(Runner) ?? 0f;
-        waterFillUI.fillAmount = 1f - (remaining / gameDuration);
+        //waterFillUI.fillAmount = 1f - (remaining / gameDuration);
+        waterFillUI.fillAmount = Mathf.Clamp01(1f - remaining / gameDuration); 
         if (closedHolesCount < holesToSpawn && !gameTimer.Expired(Runner)) totalTime += Time.deltaTime;
 
         if (Object.HasStateAuthority && gameTimer.Expired(Runner))
@@ -88,6 +92,7 @@ public class GameManager : NetworkBehaviour
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
             Runner.Spawn(holePrefab, pos, rot, Object.InputAuthority);
+            spawnedHoles.Add(pos);
         }
     }
 
@@ -96,9 +101,9 @@ public class GameManager : NetworkBehaviour
     {
         for (int i = 0; i < holesToSpawn; i++)
         {
-            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 0.7f;
-
-            Runner.Spawn(plugPrefab, spawnPos, Quaternion.identity, Object.InputAuthority,
+            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 6f;
+            Vector3 pos = new Vector3(spawnPos.x, plugSpawnArea.transform.position.y, spawnPos.z);
+            Runner.Spawn(plugPrefab, pos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
                 {
                     var rb = obj.GetComponent<Rigidbody>();
@@ -115,9 +120,10 @@ public class GameManager : NetworkBehaviour
     // === Геометрия спавна дыр ===
     private void GeneratePointOnInsideSurface(out Vector3 worldPos, out Quaternion worldRot)
     {
-        // Берём точку ВНУТРИ полусферы
-        Bounds b = hemisphere.GetComponent<Renderer>().bounds;
-        baseRadius = b.size.x / 2f; //радиус полусферы
+        //Bounds b = hemisphere.GetComponent<Renderer>().bounds;
+        //baseRadius = b.size.x / 2f;
+        MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
+        baseRadius = mf.sharedMesh.bounds.extents.x;
 
         for (int i = 0; i < 20; i++)
         {
@@ -130,7 +136,9 @@ public class GameManager : NetworkBehaviour
             float v = Random.value;
 
             float theta = u * 2 * Mathf.PI;
-            float phi = v * Mathf.PI / 2;
+            float minPhi = 0.4f / baseRadius;
+            float phi = Random.Range(minPhi, Mathf.PI / 2f - minPhi);
+            //float phi = v * Mathf.PI / 2;
 
             float x = baseRadius * Mathf.Cos(theta) * Mathf.Sin(phi);
             float y = baseRadius * Mathf.Cos(phi);
@@ -139,7 +147,20 @@ public class GameManager : NetworkBehaviour
             Vector3 localPos = new Vector3(x, y, z);
             worldPos = hemisphere.TransformPoint(localPos);
             Vector3 normal = (worldPos - hemisphere.position).normalized;
-            worldRot = Quaternion.LookRotation(normal, Vector3.up);
+            worldPos -= normal * 0.5f;
+            bool tooClose = false;
+            foreach (var p in spawnedHoles)
+            {
+                if (Vector3.Distance(worldPos, p) < 0.8f)
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+            if (tooClose)
+                continue;
+            worldRot = Quaternion.LookRotation(-normal, Vector3.up);
+            return;
 
             /*Vector3 dir = (randomPoint - b.center).normalized;
 
@@ -154,12 +175,11 @@ public class GameManager : NetworkBehaviour
             }*/
         }
 
-        // Фолбэк (чтобы не крашилось)
+        // Фолбэк
         worldPos = hemisphere.position;
         worldRot = Quaternion.identity;
     }
 
-    // === Завершение игры ===
     private void WinGame()
     {
         Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
