@@ -159,7 +159,7 @@ public class GameManager : NetworkBehaviour
             bool tooClose = false;
             foreach (var p in spawnedHoles)
             {
-                if (Vector3.Distance(worldPos, p) < 0.8f)
+                if (Vector3.Distance(worldPos, p) < 2f)
                 {
                     tooClose = true;
                     break;
@@ -179,6 +179,7 @@ public class GameManager : NetworkBehaviour
 
     private void WinGame()
     {
+        waterFillUI.fillAmount = 0;
         Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
         Runner.Shutdown();
     }
