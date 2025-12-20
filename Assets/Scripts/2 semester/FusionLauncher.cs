@@ -8,6 +8,7 @@ public class FusionLauncher : MonoBehaviour
     private NetworkRunner runner;
     public NetworkObject planePrefab;
     public Text message;
+    public NetworkPrefabRef gameManagerPrefab;
 
     async void Start()
     {
@@ -39,6 +40,16 @@ public class FusionLauncher : MonoBehaviour
 
 
         var result = await runner.StartGame(startArgs);
+        
+        //gamestart
+        /*if (result.Ok)
+        {
+            if (runner.IsSharedModeMasterClient)
+            {
+                runner.Spawn(gameManagerPrefab);
+            }
+        }*/
+
         RpcLoadedScene();
 
         if (!result.Ok)
@@ -64,7 +75,7 @@ public class FusionLauncher : MonoBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     void RpcLoadedScene()
     {
-        if (runner.IsSharedModeMasterClient) message.text = "Pleace scan the image and wait for other players!";
+        if (runner.IsSharedModeMasterClient) message.text = "Please scan the image and wait for other players!";
         else message.text = "Waiting for other players and scanning...";
     }
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -72,6 +83,13 @@ public class FusionLauncher : MonoBehaviour
     {
         if (runner.IsSharedModeMasterClient) message.text = "Object is placed! Now you can start the game or move the image.";
         else message.text = "Image was scanned! We will start very soon!";
+    }
+    public void SpawnGameManager()
+    {
+        if (runner.IsSharedModeMasterClient)
+        {
+            runner.Spawn(gameManagerPrefab);
+        }
     }
     /*[Rpc(RpcSources.All, RpcTargets.All)]
     void RpcPlayerJoined()
