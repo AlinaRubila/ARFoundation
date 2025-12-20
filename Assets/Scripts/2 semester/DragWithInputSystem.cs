@@ -5,9 +5,11 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(NetworkGrab))]
 public class DragWithInputSystem : NetworkBehaviour
 {
-    public InputAction positionAction;
+    /*public InputAction positionAction;
     public InputAction pressAction;
-    public InputActionAsset inputActionsAsset;
+    public InputActionAsset inputActionsAsset;*/
+    private InputAction pressAction;
+    private InputAction positionAction;
 
     private Camera cam;
     private NetworkGrab grab;
@@ -20,18 +22,15 @@ public class DragWithInputSystem : NetworkBehaviour
     {
         cam = Camera.main;
         grab = GetComponent<NetworkGrab>();
-        pressAction = inputActionsAsset.FindAction("Gameplay/Press");
-        positionAction = inputActionsAsset.FindAction("Gameplay/PointerPosition");
+        pressAction = GameManager.pressAction;
+        positionAction = GameManager.positionAction;
 
-        // добавляем тач, если нужно
-        pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
-        positionAction.AddBinding("<Touchscreen>/touch*/position");
     }
 
     void OnEnable()
     {
-        positionAction.Enable();
-        pressAction.Enable();
+        //positionAction.Enable();
+        //pressAction.Enable();
 
         pressAction.started += OnPress;
         pressAction.canceled += OnRelease;
@@ -42,8 +41,8 @@ public class DragWithInputSystem : NetworkBehaviour
         pressAction.started -= OnPress;
         pressAction.canceled -= OnRelease;
 
-        positionAction.Disable();
-        pressAction.Disable();
+        //positionAction.Disable();
+        //pressAction.Disable();
     }
 
     void Update()

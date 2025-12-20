@@ -17,6 +17,7 @@ public class Hole : NetworkBehaviour
 
         var plug = other.GetComponent<NetworkGrab>();
         if (plug == null) return;
+        Debug.Log("OnTriggerEnter!");
 
         // Нельзя затыкать пока игрок держит
         //if (plug.SafeIsHeld) return;

@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
@@ -25,13 +26,26 @@ public class GameManager : NetworkBehaviour
     private float baseRadius;
     List<Vector3> spawnedHoles = new List<Vector3>();
 
+    public static InputAction positionAction;
+    public static InputAction pressAction;
+    public InputActionAsset inputActionsAsset;
+
     private void Awake()
     {
         Instance = this;
+        pressAction = inputActionsAsset.FindAction("Gameplay/Press");
+        positionAction = inputActionsAsset.FindAction("Gameplay/PointerPosition");
+
+        // добавляем тач, если нужно
+        pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
+        positionAction.AddBinding("<Touchscreen>/touch*/position");
+        pressAction.Enable();
+        positionAction.Enable();
     }
 
     public override void Spawned()
     {
+       
         waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
         if (!Object.HasStateAuthority) return;
 
@@ -102,7 +116,7 @@ public class GameManager : NetworkBehaviour
         baseRadius = mf.sharedMesh.bounds.extents.x;
         for (int i = 0; i < holesToSpawn; i++)
         {
-            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 20f * baseRadius;
+            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 5f * baseRadius;
             Vector3 pos = new Vector3(spawnPos.x, 0f, spawnPos.z);
             Runner.Spawn(plugPrefab, pos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
