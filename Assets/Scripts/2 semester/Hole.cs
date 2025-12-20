@@ -15,11 +15,11 @@ public class Hole : NetworkBehaviour
         if (!IsSpawned) return;
         if (IsClosed) return;
 
-        var plug = other.GetComponent<Plug>();
+        var plug = other.GetComponent<NetworkGrab>();
         if (plug == null) return;
 
         // Нельзя затыкать пока игрок держит
-        if (plug.SafeIsHeld) return;
+        //if (plug.SafeIsHeld) return;
         IsClosed = true;
         GameManager.Instance.RegisterHoleClosed();
         Runner.Despawn(plug.Object);
