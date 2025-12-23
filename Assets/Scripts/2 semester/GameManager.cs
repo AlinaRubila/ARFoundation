@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -104,7 +105,10 @@ public class GameManager : NetworkBehaviour
             Vector3 pos;
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
-            Runner.Spawn(holePrefab, pos, rot, Object.InputAuthority);
+            Runner.Spawn(holePrefab, pos, rot, Object.InputAuthority /*, (runner, obj) =>
+            {
+                obj.transform.SetParent(hemisphere.transform, false); //эту лямбду я добавила, её можно убрать, если чо
+            }*/);
             spawnedHoles.Add(pos);
         }
     }
@@ -126,6 +130,7 @@ public class GameManager : NetworkBehaviour
                     {
                         rb.isKinematic = true;
                     }
+                    //obj.transform.SetParent(hemisphere.transform, false);
                 }
             );
 
@@ -146,7 +151,6 @@ public class GameManager : NetworkBehaviour
             float theta = u * 2 * Mathf.PI;
             float minPhi = 0.4f / baseRadius;
             float phi = Random.Range(minPhi, Mathf.PI / 2f - minPhi);
-            //float phi = v * Mathf.PI / 2;
 
             float x = baseRadius * Mathf.Cos(theta) * Mathf.Sin(phi);
             float y = baseRadius * Mathf.Cos(phi);
@@ -156,6 +160,8 @@ public class GameManager : NetworkBehaviour
             worldPos = hemisphere.TransformPoint(localPos);
             Vector3 normal = (worldPos - hemisphere.position).normalized;
             worldPos -= normal * 0.5f;
+            /*Vector3 normal = randomPoint.normalized;
+            worldPos = randomPoint - normal * 0.05f;*/
             bool tooClose = false;
             foreach (var p in spawnedHoles)
             {
@@ -171,9 +177,8 @@ public class GameManager : NetworkBehaviour
             return;
 
         }
-
-        // Фолбэк
         worldPos = hemisphere.position;
+        //worldPos = Vector3.zero;
         worldRot = Quaternion.identity;
     }
 

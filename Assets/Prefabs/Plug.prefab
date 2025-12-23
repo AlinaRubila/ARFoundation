@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5553333643996602513}
   - component: {fileID: 4170906460884569771}
   - component: {fileID: 3315609711743071246}
-  - component: {fileID: 7153621130613592849}
   - component: {fileID: -8258550866668425622}
   - component: {fileID: 6535698251679495570}
   - component: {fileID: 5501486487647966311}
@@ -133,31 +132,6 @@ MonoBehaviour:
   - {fileID: 6535698251679495570}
   - {fileID: 5501486487647966311}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &7153621130613592849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4056376702294304400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2131077171
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!54 &-8258550866668425622
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -209,22 +183,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d110525c9be49a49838fa0faf4d72c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionAction:
-    m_Name: Position
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 5f0b8710-ce4c-48cb-8cf2-f83410cdd69e
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  pressAction:
-    m_Name: Press
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 8dfd98b4-9ec1-46ac-85a1-1c014f92e42d
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  inputActionsAsset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
