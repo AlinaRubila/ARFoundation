@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
@@ -16,7 +17,7 @@ public class GameManager : NetworkBehaviour
     [Header("UI Water Timer")]
     public Image waterFillUI;
     public float gameDuration = 60f;
-    public float totalTime = 0f;
+    float totalTime = 0f;
 
     [Header("Gameplay")]
     public int holesToSpawn = 5;
@@ -24,12 +25,18 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance { get; private set; }
     [Networked] private TickTimer gameTimer { get; set; }
     [Networked] private int closedHolesCount { get; set; }
+    [Networked] private bool isOver { get; set; }
+    private bool uiShown = false;
+    enum GameResult {None, Win, Lose}
+    [Networked] private GameResult gameResult { get; set; }
+
     private float baseRadius;
     List<Vector3> spawnedHoles = new List<Vector3>();
 
     public static InputAction positionAction;
     public static InputAction pressAction;
     public InputActionAsset inputActionsAsset;
+    public UIManager ui;
 
     private void Awake()
     {
@@ -52,6 +59,7 @@ public class GameManager : NetworkBehaviour
 
         hemisphere = GameObject.FindWithTag("Hemisphere").transform;
         plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
+        ui = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
 
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
 
@@ -63,7 +71,20 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        if (!gameTimer.IsRunning)
+        if (isOver && !uiShown)
+        {
+            switch (gameResult)
+            {
+                case GameResult.Win:
+                    WinGame();
+                    break;
+                case GameResult.Lose:
+                    LoseGame(); 
+                    break;
+            }
+            uiShown = true;
+        }
+        if (!gameTimer.IsRunning || isOver)
             return;
         /*if (gameTimer.Expired(Runner))
             return;*/
@@ -74,7 +95,9 @@ public class GameManager : NetworkBehaviour
 
         if (Object.HasStateAuthority && gameTimer.Expired(Runner))
         {
-            LoseGame();
+            //LoseGame();
+            isOver = true;
+            gameResult = GameResult.Lose;
         }
     }
 
@@ -87,7 +110,9 @@ public class GameManager : NetworkBehaviour
 
         if (closedHolesCount >= holesToSpawn)
         {
-            WinGame();
+            //WinGame();
+            isOver = true;
+            gameResult = GameResult.Win;
         }
     }
 
@@ -186,12 +211,21 @@ public class GameManager : NetworkBehaviour
     {
         waterFillUI.fillAmount = 0;
         Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
-        Runner.Shutdown();
+        ui.ShowWindow("You won!");
+        isOver = true;
+        //Runner.Shutdown();
     }
 
     private void LoseGame()
     {
         Debug.Log("LOSE! Вода поднялась.");
+        ui.ShowWindow("You lost!");
+        isOver = true;
+        //Runner.Shutdown();
+    }
+    public void Exit()
+    {
         Runner.Shutdown();
+        SceneManager.LoadScene("StartMultiplayer");
     }
 }

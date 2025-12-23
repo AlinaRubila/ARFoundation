@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 658821974106226829}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,6 +56,7 @@ MonoBehaviour:
   totalTime: 0
   holesToSpawn: 5
   inputActionsAsset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  ui: {fileID: 0}
 --- !u!114 &658821974106226829
 MonoBehaviour:
   m_ObjectHideFlags: 0
