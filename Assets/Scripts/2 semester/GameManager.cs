@@ -1,6 +1,5 @@
 using Fusion;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -21,7 +20,6 @@ public class GameManager : NetworkBehaviour
 
     [Header("Gameplay")]
     public int holesToSpawn = 5;
-
     public static GameManager Instance { get; private set; }
     [Networked] private TickTimer gameTimer { get; set; }
     [Networked] private int closedHolesCount { get; set; }
@@ -29,15 +27,18 @@ public class GameManager : NetworkBehaviour
     private bool uiShown = false;
     enum GameResult {None, Win, Lose}
     [Networked] private GameResult gameResult { get; set; }
-
     private float baseRadius;
-    List<Vector3> spawnedHoles = new List<Vector3>();
-
+    [Networked, Capacity(5)]
+    //List<Vector3> spawnedHoles => default;
+    NetworkArray<Vector3> spawnedHoles => default;
+    public UIManager ui;
+    [Networked] private int HoleSeed { get; set; }
+    [Networked] bool isSpawned { get; set; }
+    System.Random rng { get; set; }
+    [Header("Input Assets")]
     public static InputAction positionAction;
     public static InputAction pressAction;
     public InputActionAsset inputActionsAsset;
-    public UIManager ui;
-
     private void Awake()
     {
         Instance = this;
@@ -53,16 +54,17 @@ public class GameManager : NetworkBehaviour
 
     public override void Spawned()
     {
-       
-        waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
         if (!Object.HasStateAuthority) return;
-
+        waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
         hemisphere = GameObject.FindWithTag("Hemisphere").transform;
         plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
         ui = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
-
+        if (!Runner.IsSharedModeMasterClient || isSpawned)
+            return;
+        HoleSeed = Runner.Tick;
+        rng = new System.Random(HoleSeed);
+        isSpawned = true;
         LoadHemisphereRadius();
         SpawnHoles();
         SpawnPlugs();
@@ -86,8 +88,6 @@ public class GameManager : NetworkBehaviour
         }
         if (!gameTimer.IsRunning || isOver)
             return;
-        /*if (gameTimer.Expired(Runner))
-            return;*/
 
         float remaining = gameTimer.RemainingTime(Runner) ?? 0f;
         waterFillUI.fillAmount = Mathf.Clamp01(1f - remaining / gameDuration); 
@@ -130,12 +130,12 @@ public class GameManager : NetworkBehaviour
             Vector3 pos;
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
-            Runner.Spawn(holePrefab, pos, rot, Object.InputAuthority, (runner, obj) =>
+            Runner.Spawn(holePrefab, pos, rot, PlayerRef.None, (runner, obj) =>
             {
-                obj.transform.SetParent(hemisphere.transform, true); //эту лямбду я добавила, её можно убрать, если чо
-                //obj.transform.localScale = new Vector3(0.2f, 0.3f, 0.2f);
+                obj.transform.SetParent(hemisphere.transform, true); 
             });
-            spawnedHoles.Add(pos);
+            //spawnedHoles.Add(pos);
+            spawnedHoles.Set(i, pos);
         }
     }
 
@@ -146,7 +146,8 @@ public class GameManager : NetworkBehaviour
         baseRadius = mf.sharedMesh.bounds.extents.x;
         for (int i = 0; i < holesToSpawn; i++)
         {
-            Vector3 spawnPos = plugSpawnArea.transform.position + Random.insideUnitSphere * 5f * baseRadius;
+            Vector3 randVector = new Vector3((float)rng.NextDouble(), 0f, (float)rng.NextDouble()).normalized;
+            Vector3 spawnPos = plugSpawnArea.transform.position + randVector * 5f * baseRadius;
             Vector3 pos = new Vector3(spawnPos.x, 0f, spawnPos.z);
             Runner.Spawn(plugPrefab, pos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
@@ -158,14 +159,12 @@ public class GameManager : NetworkBehaviour
                     }
                     obj.transform.SetParent(hemisphere.transform, true);
                     obj.transform.localRotation = Quaternion.identity;
-                    //obj.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
                 }
             );
 
         }
     }
 
-    // === Геометрия спавна дыр ===
     private void GeneratePointOnInsideSurface(out Vector3 worldPos, out Quaternion worldRot)
     {
         MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
@@ -173,12 +172,15 @@ public class GameManager : NetworkBehaviour
 
         for (int i = 0; i < 20; i++)
         {
-            float u = Random.value;
-            float v = Random.value;
+            /*float u = Random.value;
+            float v = Random.value;*/
+            float u = (float)rng.NextDouble();
+            float v = (float)rng.NextDouble();
 
             float theta = u * 2 * Mathf.PI;
             float minPhi = 0.4f / baseRadius;
-            float phi = Random.Range(minPhi, Mathf.PI / 2f - minPhi);
+            //float phi = Random.Range(minPhi, Mathf.PI / 2f - minPhi);
+             float phi = Mathf.Lerp(minPhi, Mathf.PI / 2f - minPhi, v);
           
             float x = baseRadius * Mathf.Cos(theta) * Mathf.Sin(phi);
             float y = baseRadius * Mathf.Cos(phi);
@@ -191,6 +193,8 @@ public class GameManager : NetworkBehaviour
             bool tooClose = false;
             foreach (var p in spawnedHoles)
             {
+                if (spawnedHoles[i] == Vector3.zero)
+                    continue;
                 if (Vector3.Distance(worldPos, p) < 2f)
                 {
                     tooClose = true;
@@ -201,7 +205,6 @@ public class GameManager : NetworkBehaviour
                 continue;
             worldRot = Quaternion.LookRotation(-normal, Vector3.up);
             return;
-
         }
         worldPos = hemisphere.position;
         worldRot = Quaternion.identity;
@@ -213,7 +216,6 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
         ui.ShowWindow("You won!");
         isOver = true;
-        //Runner.Shutdown();
     }
 
     private void LoseGame()
@@ -221,7 +223,6 @@ public class GameManager : NetworkBehaviour
         Debug.Log("LOSE! Вода поднялась.");
         ui.ShowWindow("You lost!");
         isOver = true;
-        //Runner.Shutdown();
     }
     public void Exit()
     {
