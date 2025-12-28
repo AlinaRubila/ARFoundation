@@ -55,10 +55,10 @@ public class GameManager : NetworkBehaviour
     public override void Spawned()
     {
         if (!Object.HasStateAuthority) return;
-        waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
-        hemisphere = GameObject.FindWithTag("Hemisphere").transform;
-        plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
-        ui = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+        //waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
+        //hemisphere = GameObject.FindWithTag("Hemisphere").transform;
+        //plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
+        //ui = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
         if (!Runner.IsSharedModeMasterClient || isSpawned)
             return;
@@ -130,10 +130,15 @@ public class GameManager : NetworkBehaviour
             Vector3 pos;
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
-            Runner.Spawn(holePrefab, pos, rot, PlayerRef.None, (runner, obj) =>
-            {
-                obj.transform.SetParent(hemisphere.transform, true); 
-            });
+            Runner.Spawn(holePrefab,
+                hemisphere.TransformPoint(pos),
+                hemisphere.rotation * rot,
+                Object.InputAuthority,
+                (runner, obj) =>
+                {
+                    obj.transform.SetParent(hemisphere, true);
+                }
+                );
             //spawnedHoles.Add(pos);
             spawnedHoles.Set(i, pos);
         }

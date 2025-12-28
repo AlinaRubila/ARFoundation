@@ -50,7 +50,7 @@ public class FusionLauncher : MonoBehaviour
             }
         }*/
 
-        RpcLoadedScene();
+        //RpcLoadedScene();
 
         if (!result.Ok)
         {
