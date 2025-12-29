@@ -44,8 +44,10 @@ public class ImageBasedAlignment : MonoBehaviour
         Quaternion clientImageRot = img.transform.rotation;
 
         // 2. Где она должна быть? (по хосту)
-        Vector3 hostImagePos = ImageTracking.sharedImageTransform.position;
-        Quaternion hostImageRot = ImageTracking.sharedImageTransform.rotation;
+        //Vector3 hostImagePos = ImageTracking.sharedImageTransform.position;
+        //Quaternion hostImageRot = ImageTracking.sharedImageTransform.rotation;
+        Vector3 hostImagePos = ImageTracking.sharedImagePos;
+        Quaternion hostImageRot = ImageTracking.sharedImageRot;
 
         // 3. Вычисляем смещение
         Vector3 deltaPos = hostImagePos - clientImagePos;

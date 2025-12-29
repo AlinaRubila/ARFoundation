@@ -86,16 +86,18 @@ public class FusionLauncher : MonoBehaviour
     }
     public void SpawnGameManager()
     {
-        if (runner.IsSharedModeMasterClient)
+        if (runner.IsRunning)
         {
-            runner.Spawn(gameManagerPrefab);
+            //runner.Spawn(gameManagerPrefab);
+            RpcRequestStartGame();
         }
     }
-    /*[Rpc(RpcSources.All, RpcTargets.All)]
-    void RpcPlayerJoined()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RpcRequestStartGame()
     {
-        message.text = $"Current players: {runner.ActivePlayers.Count()}";
-        Debug.Log("A new player joined!");
-    }*/
+        if (!runner.IsSharedModeMasterClient) return;
+
+        runner.Spawn(gameManagerPrefab);
+    }
 
 }

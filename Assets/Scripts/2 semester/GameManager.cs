@@ -4,34 +4,36 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class GameManager : NetworkBehaviour
 {
     [Header("Scene References")]
-    public Transform hemisphere;
+    //public Transform hemisphere;
     public NetworkPrefabRef holePrefab;
     public NetworkPrefabRef plugPrefab;
-    public Transform plugSpawnArea;
+    UIManager uiManager;
+    //public Transform plugSpawnArea;
+    [SerializeField] private Transform hemisphere;
+    [SerializeField] private Transform plugSpawnArea;
 
     [Header("UI Water Timer")]
-    public Image waterFillUI;
     public float gameDuration = 60f;
     float totalTime = 0f;
+    [Networked] public float WaterProgress { get; set; }
 
     [Header("Gameplay")]
     public int holesToSpawn = 5;
     public static GameManager Instance { get; private set; }
     [Networked] private TickTimer gameTimer { get; set; }
     [Networked] private int closedHolesCount { get; set; }
-    [Networked] private bool isOver { get; set; }
-    private bool uiShown = false;
-    enum GameResult {None, Win, Lose}
-    [Networked] private GameResult gameResult { get; set; }
+    [Networked] public bool isOver { get; set; }
+    public enum GameResult {None, Win, Lose}
+    [Networked] public GameResult gameResult { get; set; }
     private float baseRadius;
     [Networked, Capacity(5)]
     //List<Vector3> spawnedHoles => default;
     NetworkArray<Vector3> spawnedHoles => default;
-    public UIManager ui;
     [Networked] private int HoleSeed { get; set; }
     [Networked] bool isSpawned { get; set; }
     System.Random rng { get; set; }
@@ -50,15 +52,14 @@ public class GameManager : NetworkBehaviour
         positionAction.AddBinding("<Touchscreen>/touch*/position");
         pressAction.Enable();
         positionAction.Enable();
+        uiManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+        uiManager.GetManager();
     }
-
     public override void Spawned()
     {
         if (!Object.HasStateAuthority) return;
-        //waterFillUI = GameObject.FindWithTag("WaterUI").GetComponent<Image>();
         //hemisphere = GameObject.FindWithTag("Hemisphere").transform;
         //plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
-        //ui = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
         if (!Runner.IsSharedModeMasterClient || isSpawned)
             return;
@@ -68,36 +69,20 @@ public class GameManager : NetworkBehaviour
         LoadHemisphereRadius();
         SpawnHoles();
         SpawnPlugs();
-
     }
-
     private void Update()
     {
-        if (isOver && !uiShown)
-        {
-            switch (gameResult)
-            {
-                case GameResult.Win:
-                    WinGame();
-                    break;
-                case GameResult.Lose:
-                    LoseGame(); 
-                    break;
-            }
-            uiShown = true;
-        }
         if (!gameTimer.IsRunning || isOver)
             return;
 
         float remaining = gameTimer.RemainingTime(Runner) ?? 0f;
-        waterFillUI.fillAmount = Mathf.Clamp01(1f - remaining / gameDuration); 
+        if (Object.HasStateAuthority) 
+        WaterProgress = Mathf.Clamp01(1f - remaining / gameDuration);
         if (closedHolesCount < holesToSpawn && !gameTimer.Expired(Runner)) totalTime += Time.deltaTime;
 
         if (Object.HasStateAuthority && gameTimer.Expired(Runner))
         {
-            //LoseGame();
-            isOver = true;
-            gameResult = GameResult.Lose;
+            LoseGame();
         }
     }
 
@@ -110,9 +95,7 @@ public class GameManager : NetworkBehaviour
 
         if (closedHolesCount >= holesToSpawn)
         {
-            //WinGame();
-            isOver = true;
-            gameResult = GameResult.Win;
+            WinGame();
         }
     }
 
@@ -130,16 +113,19 @@ public class GameManager : NetworkBehaviour
             Vector3 pos;
             Quaternion rot;
             GeneratePointOnInsideSurface(out pos, out rot);
-            Runner.Spawn(holePrefab,
-                hemisphere.TransformPoint(pos),
-                hemisphere.rotation * rot,
-                Object.InputAuthority,
+            Runner.Spawn(holePrefab, hemisphere.TransformPoint(pos), hemisphere.rotation * rot, Object.InputAuthority,
                 (runner, obj) =>
                 {
                     obj.transform.SetParent(hemisphere, true);
                 }
                 );
-            //spawnedHoles.Add(pos);
+            /*Runner.Spawn(holePrefab, Vector3.zero, Quaternion.identity, Object.InputAuthority,
+                (runner, obj) =>
+                {
+                    obj.transform.SetParent(hemisphere, false);
+                    obj.transform.localPosition = pos;
+                    obj.transform.localRotation = rot;
+                });*/
             spawnedHoles.Set(i, pos);
         }
     }
@@ -166,6 +152,15 @@ public class GameManager : NetworkBehaviour
                     obj.transform.localRotation = Quaternion.identity;
                 }
             );
+            /*Runner.Spawn(plugPrefab, Vector3.zero, Quaternion.identity, Object.InputAuthority,
+                (runner, obj) =>
+                {
+                    var rb = obj.GetComponent<Rigidbody>();
+                    if (rb != null) { rb.isKinematic = true;}
+                    obj.transform.SetParent(hemisphere, false);
+                    obj.transform.localPosition = pos;
+                    obj.transform.localRotation = Quaternion.identity;
+                });*/
 
         }
     }
@@ -177,22 +172,19 @@ public class GameManager : NetworkBehaviour
 
         for (int i = 0; i < 20; i++)
         {
-            /*float u = Random.value;
-            float v = Random.value;*/
             float u = (float)rng.NextDouble();
             float v = (float)rng.NextDouble();
 
             float theta = u * 2 * Mathf.PI;
             float minPhi = 0.4f / baseRadius;
-            //float phi = Random.Range(minPhi, Mathf.PI / 2f - minPhi);
              float phi = Mathf.Lerp(minPhi, Mathf.PI / 2f - minPhi, v);
           
             float x = baseRadius * Mathf.Cos(theta) * Mathf.Sin(phi);
             float y = baseRadius * Mathf.Cos(phi);
             float z = baseRadius * Mathf.Sin(theta) * Mathf.Sin(phi);
-            Vector3 randomPoint = new Vector3(x, y, z);
             Vector3 localPos = new Vector3(x, y, z);
             worldPos = hemisphere.TransformPoint(localPos);
+            //worldPos = localPos;
             Vector3 normal = (worldPos - hemisphere.position).normalized;
             worldPos -= normal * 0.5f;
             bool tooClose = false;
@@ -217,17 +209,17 @@ public class GameManager : NetworkBehaviour
 
     private void WinGame()
     {
-        waterFillUI.fillAmount = 0;
+        WaterProgress = 0;
         Debug.Log($"WIN! Все дыры закрыты. Время прохождения - {totalTime}");
-        ui.ShowWindow("You won!");
         isOver = true;
+        gameResult = GameResult.Win;
     }
 
     private void LoseGame()
     {
         Debug.Log("LOSE! Вода поднялась.");
-        ui.ShowWindow("You lost!");
         isOver = true;
+        gameResult = GameResult.Lose;
     }
     public void Exit()
     {

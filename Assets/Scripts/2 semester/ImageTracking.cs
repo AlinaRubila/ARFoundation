@@ -12,7 +12,9 @@ public class ImageTracking : MonoBehaviour
     [SerializeField] private NetworkObject planePrefab;
     [SerializeField] Button start;
     //private GameObject _spawnedObject;
-    public static Transform sharedImageTransform;    // опорная точка
+    //public static Transform sharedImageTransform;
+    public static Vector3 sharedImagePos;
+    public static Quaternion sharedImageRot;// опорная точка
     public static bool anchorDefined = false;
     private NetworkRunner runner;
     NetworkObject spawned;
@@ -63,7 +65,9 @@ public class ImageTracking : MonoBehaviour
             if (netObj != null) spawned = netObj;
             isSpawned = true;
             start.enabled = true;
-            sharedImageTransform = image.transform;
+            //sharedImageTransform = image.transform;
+            sharedImagePos = image.transform.position;
+            sharedImageRot = image.transform.rotation;
             anchorDefined = true;
         }
         spawned.transform.SetPositionAndRotation(pos, rot);

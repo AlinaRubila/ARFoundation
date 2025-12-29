@@ -520,6 +520,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: sky_network
       objectReference: {fileID: 0}
+    - target: {fileID: 6727014347820943957, guid: 5e869d79fe0498244a6b1cd6e9fa7f04, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1020,6 +1024,7 @@ MonoBehaviour:
   panel: {fileID: 1784948297}
   textField: {fileID: 798078758}
   gm: {fileID: 0}
+  waterFillUI: {fileID: 2088492475}
 --- !u!4 &1377682520
 Transform:
   m_ObjectHideFlags: 0
@@ -1464,7 +1469,7 @@ MonoBehaviour:
   planePrefab: {fileID: 0}
   message: {fileID: 1864931594}
   gameManagerPrefab:
-    RawGuidValue: c60ce9380db977447b36b8ef1982c9c8
+    RawGuidValue: 68094a794976b104ba0d1615e8733214
 --- !u!4 &2107283453
 Transform:
   m_ObjectHideFlags: 0

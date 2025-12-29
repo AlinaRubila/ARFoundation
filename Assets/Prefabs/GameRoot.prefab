@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4608538631755900806}
   m_Layer: 0
   m_Name: plugs
-  m_TagString: Untagged
+  m_TagString: PlugSpawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 5209389159057135637}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 773, y: -190, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -116,6 +116,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameController
       objectReference: {fileID: 0}
+    - target: {fileID: 3479861828304497038, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
+      propertyPath: hemisphere
+      value: 
+      objectReference: {fileID: 2553123436185214095}
+    - target: {fileID: 3479861828304497038, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
+      propertyPath: plugSpawnArea
+      value: 
+      objectReference: {fileID: 4608538631755900806}
     - target: {fileID: 8112916385897192908, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
