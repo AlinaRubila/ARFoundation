@@ -1,19 +1,14 @@
 using Fusion;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class GameManager : NetworkBehaviour
 {
     [Header("Scene References")]
-    //public Transform hemisphere;
     public NetworkPrefabRef holePrefab;
     public NetworkPrefabRef plugPrefab;
     UIManager uiManager;
-    //public Transform plugSpawnArea;
     [SerializeField] private Transform hemisphere;
     [SerializeField] private Transform plugSpawnArea;
 
@@ -32,7 +27,6 @@ public class GameManager : NetworkBehaviour
     [Networked] public GameResult gameResult { get; set; }
     private float baseRadius;
     [Networked, Capacity(5)]
-    //List<Vector3> spawnedHoles => default;
     NetworkArray<Vector3> spawnedHoles => default;
     [Networked] private int HoleSeed { get; set; }
     [Networked] bool isSpawned { get; set; }
@@ -47,19 +41,19 @@ public class GameManager : NetworkBehaviour
         pressAction = inputActionsAsset.FindAction("Gameplay/Press");
         positionAction = inputActionsAsset.FindAction("Gameplay/PointerPosition");
 
-        // добавл€ем тач, если нужно
         pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
         positionAction.AddBinding("<Touchscreen>/touch*/position");
         pressAction.Enable();
-        positionAction.Enable();
-        uiManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-        uiManager.GetManager();
+        positionAction.Enable(); //как сказал GPT, момент с вводом может быть проблемным - типа он включаетс€ у всех. Ќадо проверить
+
+        /*uiManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+        uiManager.GetManager();*/
     }
     public override void Spawned()
     {
+        uiManager = GameObject.FindWithTag("UIManager")?.GetComponent<UIManager>();
+        if (uiManager != null) uiManager.GetManager();
         if (!Object.HasStateAuthority) return;
-        //hemisphere = GameObject.FindWithTag("Hemisphere").transform;
-        //plugSpawnArea = GameObject.FindWithTag("PlugSpawn").transform;
         gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
         if (!Runner.IsSharedModeMasterClient || isSpawned)
             return;
@@ -119,13 +113,6 @@ public class GameManager : NetworkBehaviour
                     obj.transform.SetParent(hemisphere, true);
                 }
                 );
-            /*Runner.Spawn(holePrefab, Vector3.zero, Quaternion.identity, Object.InputAuthority,
-                (runner, obj) =>
-                {
-                    obj.transform.SetParent(hemisphere, false);
-                    obj.transform.localPosition = pos;
-                    obj.transform.localRotation = rot;
-                });*/
             spawnedHoles.Set(i, pos);
         }
     }
@@ -152,16 +139,6 @@ public class GameManager : NetworkBehaviour
                     obj.transform.localRotation = Quaternion.identity;
                 }
             );
-            /*Runner.Spawn(plugPrefab, Vector3.zero, Quaternion.identity, Object.InputAuthority,
-                (runner, obj) =>
-                {
-                    var rb = obj.GetComponent<Rigidbody>();
-                    if (rb != null) { rb.isKinematic = true;}
-                    obj.transform.SetParent(hemisphere, false);
-                    obj.transform.localPosition = pos;
-                    obj.transform.localRotation = Quaternion.identity;
-                });*/
-
         }
     }
 
@@ -184,13 +161,12 @@ public class GameManager : NetworkBehaviour
             float z = baseRadius * Mathf.Sin(theta) * Mathf.Sin(phi);
             Vector3 localPos = new Vector3(x, y, z);
             worldPos = hemisphere.TransformPoint(localPos);
-            //worldPos = localPos;
             Vector3 normal = (worldPos - hemisphere.position).normalized;
             worldPos -= normal * 0.5f;
             bool tooClose = false;
             foreach (var p in spawnedHoles)
             {
-                if (spawnedHoles[i] == Vector3.zero)
+                if (p == Vector3.zero)
                     continue;
                 if (Vector3.Distance(worldPos, p) < 2f)
                 {

@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1045270474705392237
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4608538631755900806}
-  m_Layer: 0
-  m_Name: plugs
-  m_TagString: PlugSpawn
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4608538631755900806
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045270474705392237}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.48, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3424398020004432187}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5209389159057135637
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,7 +32,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2553123436185214095}
-  - {fileID: 4608538631755900806}
   - {fileID: 4263238627146697292}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -123,7 +91,7 @@ PrefabInstance:
     - target: {fileID: 3479861828304497038, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
       propertyPath: plugSpawnArea
       value: 
-      objectReference: {fileID: 4608538631755900806}
+      objectReference: {fileID: 4022873771160364337}
     - target: {fileID: 8112916385897192908, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -248,5 +216,10 @@ PrefabInstance:
 --- !u!4 &2553123436185214095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6201728562117120239, guid: 5e869d79fe0498244a6b1cd6e9fa7f04, type: 3}
+  m_PrefabInstance: {fileID: 8466331309204687968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4022873771160364337 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4803771908327090513, guid: 5e869d79fe0498244a6b1cd6e9fa7f04, type: 3}
   m_PrefabInstance: {fileID: 8466331309204687968}
   m_PrefabAsset: {fileID: 0}

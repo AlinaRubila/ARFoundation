@@ -50,37 +50,41 @@ public class FusionLauncher : MonoBehaviour
             }
         }*/
 
-        //RpcLoadedScene();
-
         if (!result.Ok)
         {
-            RpcServerError($"{result.ShutdownReason}");
+            //RpcServerError($"{result.ShutdownReason}");
+            message.text = $"An error occured: {result.ShutdownReason}";
             Debug.LogError("Fusion failed: " + result.ShutdownReason);
+            return;
         }
         else
             Debug.Log("Fusion started and joined session");
+        RpcLoadedScene();
     }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    /*[Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RpcStartGame()
     {
+        if (!runner.IsRunning) return;
         message.text = "Game has started!";
         Debug.Log("Game was started!");
-    }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    }*/
+    /*[Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     void RpcServerError(string errorMessage)
     {
         Debug.LogError("Ошибка сервера: " + errorMessage);
         message.text = $"An error occured: {errorMessage}";
-    }
+    }*/
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     void RpcLoadedScene()
     {
+        if (!runner.IsRunning) return;
         if (runner.IsSharedModeMasterClient) message.text = "Please scan the image and wait for other players!";
         else message.text = "Waiting for other players and scanning...";
     }
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RpcPlacedPrefab()
     {
+        if (!runner.IsRunning) return;
         if (runner.IsSharedModeMasterClient) message.text = "Object is placed! Now you can start the game or move the image.";
         else message.text = "Image was scanned! We will start very soon!";
     }
@@ -95,9 +99,11 @@ public class FusionLauncher : MonoBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RpcRequestStartGame()
     {
-        if (!runner.IsSharedModeMasterClient) return;
+        if (!runner.IsSharedModeMasterClient || !runner.IsRunning) return;
 
         runner.Spawn(gameManagerPrefab);
+        message.text = "Game has started!";
+        Debug.Log("Game was started!");
     }
 
 }
