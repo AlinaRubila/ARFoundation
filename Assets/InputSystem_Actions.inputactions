@@ -1030,7 +1030,7 @@
                     "name": "",
                     "id": "88d63d04-bc3f-442b-8436-490eb2192e65",
                     "path": "<Touchscreen>/primaryTouch/press",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Press",
@@ -1051,7 +1051,7 @@
                 {
                     "name": "",
                     "id": "3f05809a-4bc6-48df-ac1a-dc6cf7bd9a2e",
-                    "path": "<Touchscreen>/touch*/position",
+                    "path": "<Touchscreen>/primaryTouch/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

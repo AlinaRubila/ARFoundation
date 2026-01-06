@@ -10,7 +10,7 @@ public class ImageTracking : MonoBehaviour
 {
     //[SerializeField] private GameObject _placeablePrefab;
     [SerializeField] private NetworkObject planePrefab;
-    [SerializeField] Button start;
+    [SerializeField] GameObject start;
     //private GameObject _spawnedObject;
     //public static Transform sharedImageTransform;
     public static Vector3 sharedImagePos;
@@ -52,26 +52,22 @@ public class ImageTracking : MonoBehaviour
         if (runner == null || planePrefab == null) return;
         if (!runner.IsSharedModeMasterClient) return;
 
-        if (runner.ActivePlayers.Count() < 2) return;
+        //if (runner.ActivePlayers.Count() < 2) return;
         Vector3 pos = image.transform.position;
         Quaternion rot = image.transform.rotation;
         if (!isSpawned)
         {
-            //GameObject newPrefab = Instantiate(_placeablePrefab, image.transform.position, image.transform.rotation);
             //_spawnedObject = newPrefab;
             var netObj = runner.Spawn(planePrefab, pos, rot);
             Debug.Log("Spawned netObj!");
             _fus.RpcPlacedPrefab();
             if (netObj != null) spawned = netObj;
             isSpawned = true;
-            start.enabled = true;
-            //sharedImageTransform = image.transform;
+            //start.SetActive(true);
             sharedImagePos = image.transform.position;
             sharedImageRot = image.transform.rotation;
             anchorDefined = true;
         }
         spawned.transform.SetPositionAndRotation(pos, rot);
-        //_spawnedObject.transform.position = image.transform.position;
-        //_spawnedObject.transform.rotation = image.transform.rotation;
     }
 }

@@ -5,9 +5,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(NetworkGrab))]
 public class DragWithInputSystem : NetworkBehaviour
 {
-    /*public InputAction positionAction;
-    public InputAction pressAction;
-    public InputActionAsset inputActionsAsset;*/
     private InputAction pressAction;
     private InputAction positionAction;
 
@@ -29,9 +26,6 @@ public class DragWithInputSystem : NetworkBehaviour
 
     void OnEnable()
     {
-        //positionAction.Enable();
-        //pressAction.Enable();
-
         pressAction.started += OnPress;
         pressAction.canceled += OnRelease;
     }
@@ -41,8 +35,6 @@ public class DragWithInputSystem : NetworkBehaviour
         pressAction.started -= OnPress;
         pressAction.canceled -= OnRelease;
 
-        //positionAction.Disable();
-        //pressAction.Disable();
     }
 
     void Update()
@@ -54,6 +46,7 @@ public class DragWithInputSystem : NetworkBehaviour
             return;
 
         Vector2 screenPos = positionAction.ReadValue<Vector2>();
+        if (screenPos.x < 0 || screenPos.y < 0 || screenPos.x > Screen.width || screenPos.y > Screen.height) return;
         Vector3 worldPos = ScreenToWorld(screenPos);
         transform.position = worldPos + offset;
     }
@@ -75,6 +68,8 @@ public class DragWithInputSystem : NetworkBehaviour
         grab.RPC_RequestGrab(Runner.LocalPlayer);
 
         zCoord = cam.WorldToScreenPoint(transform.position).z;
+        if (zCoord <= 0f)
+            return;
         offset = transform.position - ScreenToWorld(screenPos);
 
         dragging = true;

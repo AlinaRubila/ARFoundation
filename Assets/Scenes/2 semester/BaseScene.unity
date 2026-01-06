@@ -1845,7 +1845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planePrefab: {fileID: 868201693099677427, guid: 68094a794976b104ba0d1615e8733214, type: 3}
-  start: {fileID: 1190398542}
+  start: {fileID: 1190398540}
   _imageManager: {fileID: 1970591809}
 --- !u!114 &1970591812
 MonoBehaviour:

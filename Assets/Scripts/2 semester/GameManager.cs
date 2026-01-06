@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -41,13 +42,10 @@ public class GameManager : NetworkBehaviour
         pressAction = inputActionsAsset.FindAction("Gameplay/Press");
         positionAction = inputActionsAsset.FindAction("Gameplay/PointerPosition");
 
-        pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
-        positionAction.AddBinding("<Touchscreen>/touch*/position");
+        //pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
+        //positionAction.AddBinding("<Touchscreen>/touch*/position");
         pressAction.Enable();
         positionAction.Enable(); //как сказал GPT, момент с вводом может быть проблемным - типа он включается у всех. Надо проверить
-
-        /*uiManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-        uiManager.GetManager();*/
     }
     public override void Spawned()
     {
@@ -80,7 +78,6 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    // Вызывается дыркой, когда она закрыта игроком
     public void RegisterHoleClosed()
     {
         if (!Object.HasStateAuthority) return;
@@ -93,7 +90,6 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    // === Генерация дыр ===
     private void LoadHemisphereRadius()
     {
         MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
@@ -102,22 +98,23 @@ public class GameManager : NetworkBehaviour
 
     private void SpawnHoles()
     {
+        List<Vector3> localPositions = new List<Vector3>();
         for (int i = 0; i < holesToSpawn; i++)
-        {
-            Vector3 pos;
-            Quaternion rot;
-            GeneratePointOnInsideSurface(out pos, out rot);
-            Runner.Spawn(holePrefab, hemisphere.TransformPoint(pos), hemisphere.rotation * rot, Object.InputAuthority,
-                (runner, obj) =>
-                {
-                    obj.transform.SetParent(hemisphere, true);
-                }
-                );
+            {
+                Vector3 pos;
+                Quaternion rot;
+                GeneratePointOnInsideSurface(localPositions, out pos, out rot);
+                Runner.Spawn(holePrefab, hemisphere.TransformPoint(pos), hemisphere.rotation * rot, Object.InputAuthority,
+                    (runner, obj) =>
+                    {
+                        obj.transform.SetParent(hemisphere, true);
+                    }
+                    );
+            localPositions.Add(pos);
             spawnedHoles.Set(i, pos);
-        }
+            }
     }
 
-    // === Генерация затычек ===
     private void SpawnPlugs()
     {
         MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
@@ -125,7 +122,7 @@ public class GameManager : NetworkBehaviour
         for (int i = 0; i < holesToSpawn; i++)
         {
             Vector3 randVector = new Vector3((float)rng.NextDouble(), 0f, (float)rng.NextDouble()).normalized;
-            Vector3 spawnPos = plugSpawnArea.transform.position + randVector * 5f * baseRadius;
+            Vector3 spawnPos = plugSpawnArea.transform.position + randVector * 2f * baseRadius;
             Vector3 pos = new Vector3(spawnPos.x, 0f, spawnPos.z);
             Runner.Spawn(plugPrefab, pos, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) =>
@@ -142,12 +139,12 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    private void GeneratePointOnInsideSurface(out Vector3 worldPos, out Quaternion worldRot)
+    private void GeneratePointOnInsideSurface(List<Vector3> existingPositions, out Vector3 worldPos, out Quaternion worldRot)
     {
         MeshFilter mf = hemisphere.GetComponent<MeshFilter>();
         baseRadius = mf.sharedMesh.bounds.extents.x;
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 40; i++)
         {
             float u = (float)rng.NextDouble();
             float v = (float)rng.NextDouble();
@@ -164,11 +161,11 @@ public class GameManager : NetworkBehaviour
             Vector3 normal = (worldPos - hemisphere.position).normalized;
             worldPos -= normal * 0.5f;
             bool tooClose = false;
-            foreach (var p in spawnedHoles)
+            foreach (var p in existingPositions)
             {
-                if (p == Vector3.zero)
-                    continue;
-                if (Vector3.Distance(worldPos, p) < 2f)
+                /*if (p == Vector3.zero)
+                    continue;*/
+                if (Vector3.Distance(worldPos, p) < 0.4f)
                 {
                     tooClose = true;
                     break;
