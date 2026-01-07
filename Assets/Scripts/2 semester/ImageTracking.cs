@@ -11,6 +11,7 @@ public class ImageTracking : MonoBehaviour
     //[SerializeField] private GameObject _placeablePrefab;
     [SerializeField] private NetworkObject planePrefab;
     [SerializeField] GameObject start;
+    public NetworkObject gamePrefab;
     //private GameObject _spawnedObject;
     //public static Transform sharedImageTransform;
     public static Vector3 sharedImagePos;
@@ -20,7 +21,11 @@ public class ImageTracking : MonoBehaviour
     NetworkObject spawned;
     [SerializeField] private ARTrackedImageManager _imageManager;
     bool isSpawned = false;
+    bool isGameSpawned = false;
+    NetworkObject gameSpawned;
     FusionLauncher _fus;
+    ARTrackedImage trackedImg;
+    public GameObject startButton;
     private void Awake()
     {
         runner = FindFirstObjectByType<NetworkRunner>();
@@ -68,6 +73,27 @@ public class ImageTracking : MonoBehaviour
             sharedImageRot = image.transform.rotation;
             anchorDefined = true;
         }
+        trackedImg = image;
         spawned.transform.SetPositionAndRotation(pos, rot);
+    }
+
+    public void GameSpawn()
+    {
+        if (runner == null || gamePrefab == null) return;
+        if (!runner.IsSharedModeMasterClient) return;
+
+        //if (runner.ActivePlayers.Count() < 2) return;
+        Vector3 pos = trackedImg.transform.position;
+        Quaternion rot = trackedImg.transform.rotation;
+        if (!isGameSpawned)
+        {
+            //_spawnedObject = newPrefab;
+            var netGameObj = runner.Spawn(gamePrefab, pos, rot);
+            Debug.Log("Spawned netObj!");
+            _fus.RpcPlacedPrefab();
+            isGameSpawned = true;
+            //start.SetActive(true);
+        }
+        startButton.SetActive(false);
     }
 }

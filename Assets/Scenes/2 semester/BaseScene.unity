@@ -1167,7 +1167,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 133, y: -550}
+  m_AnchoredPosition: {x: 133, y: -154}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1190398542
@@ -1226,9 +1226,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1970591810}
-        m_TargetAssemblyTypeName: FusionLauncher, Assembly-CSharp
-        m_MethodName: SpawnGameManager
+      - m_Target: {fileID: 1970591811}
+        m_TargetAssemblyTypeName: ImageTracking, Assembly-CSharp
+        m_MethodName: GameSpawn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1832,6 +1832,7 @@ MonoBehaviour:
   message: {fileID: 1949225716}
   gameManagerPrefab:
     RawGuidValue: 68094a794976b104ba0d1615e8733214
+  startButton: {fileID: 1190398540}
 --- !u!114 &1970591811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1844,9 +1845,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b481960e202a3194c8d6a54d45f63279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planePrefab: {fileID: 868201693099677427, guid: 68094a794976b104ba0d1615e8733214, type: 3}
+  planePrefab: {fileID: 1240905691421876993, guid: a0911d55705f9584a8d082ddec712eb5, type: 3}
   start: {fileID: 1190398540}
+  gamePrefab: {fileID: 868201693099677427, guid: 68094a794976b104ba0d1615e8733214, type: 3}
   _imageManager: {fileID: 1970591809}
+  startButton: {fileID: 1190398540}
 --- !u!114 &1970591812
 MonoBehaviour:
   m_ObjectHideFlags: 0

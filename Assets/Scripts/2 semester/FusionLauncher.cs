@@ -9,6 +9,7 @@ public class FusionLauncher : MonoBehaviour
     public NetworkObject planePrefab;
     public Text message;
     public NetworkPrefabRef gameManagerPrefab;
+    public GameObject startButton;
 
     async void Start()
     {
@@ -59,6 +60,7 @@ public class FusionLauncher : MonoBehaviour
         }
         else
             Debug.Log("Fusion started and joined session");
+        startButton.SetActive(true);
         RpcLoadedScene();
     }
     /*[Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
