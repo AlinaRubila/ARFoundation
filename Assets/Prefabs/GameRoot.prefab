@@ -85,6 +85,10 @@ PrefabInstance:
       value: GameController
       objectReference: {fileID: 0}
     - target: {fileID: 3479861828304497038, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
+      propertyPath: root
+      value: 
+      objectReference: {fileID: 3424398020004432187}
+    - target: {fileID: 3479861828304497038, guid: c60ce9380db977447b36b8ef1982c9c8, type: 3}
       propertyPath: hemisphere
       value: 
       objectReference: {fileID: 2553123436185214095}

@@ -11,6 +11,7 @@ public class GameManager : NetworkBehaviour
     public NetworkPrefabRef plugPrefab;
     UIManager uiManager;
     [SerializeField] private Transform hemisphere;
+    [SerializeField] private Transform root;
     [SerializeField] private Transform plugSpawnArea;
 
     [Header("UI Water Timer")]
@@ -41,9 +42,6 @@ public class GameManager : NetworkBehaviour
         Instance = this;
         pressAction = inputActionsAsset.FindAction("Gameplay/Press");
         positionAction = inputActionsAsset.FindAction("Gameplay/PointerPosition");
-
-        //pressAction.AddBinding("<Touchscreen>/primaryTouch/press");
-        //positionAction.AddBinding("<Touchscreen>/touch*/position");
         pressAction.Enable();
         positionAction.Enable(); //как сказал GPT, момент с вводом может быть проблемным - типа он включается у всех. Надо проверить
     }
@@ -84,7 +82,7 @@ public class GameManager : NetworkBehaviour
 
         closedHolesCount++;
 
-        if (closedHolesCount >= holesToSpawn)
+        if (closedHolesCount >= holesToSpawn || closedHolesCount >= spawnedHoles.Length)
         {
             WinGame();
         }
@@ -107,7 +105,7 @@ public class GameManager : NetworkBehaviour
                 Runner.Spawn(holePrefab, hemisphere.TransformPoint(pos), hemisphere.rotation * rot, Object.InputAuthority,
                     (runner, obj) =>
                     {
-                        obj.transform.SetParent(hemisphere, true);
+                        obj.transform.SetParent(root, true);
                     }
                     );
             localPositions.Add(pos);
@@ -132,7 +130,7 @@ public class GameManager : NetworkBehaviour
                     {
                         rb.isKinematic = true;
                     }
-                    obj.transform.SetParent(hemisphere.transform, true);
+                    obj.transform.SetParent(root, true);
                     obj.transform.localRotation = Quaternion.identity;
                 }
             );
@@ -165,7 +163,7 @@ public class GameManager : NetworkBehaviour
             {
                 /*if (p == Vector3.zero)
                     continue;*/
-                if (Vector3.Distance(worldPos, p) < 0.4f)
+                if (Vector3.Distance(worldPos, p) < 0.5f)
                 {
                     tooClose = true;
                     break;
